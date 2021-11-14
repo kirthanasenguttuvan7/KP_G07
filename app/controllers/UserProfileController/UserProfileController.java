@@ -40,8 +40,7 @@ public class UserProfileController extends Controller {
     
     public CompletionStage<Result> userProfile(String username){
     	
-		//return ok(UserProfile.render(username));
-		return ws.url("https://api.github.com/users/defunkt")
+		return ws.url("https://api.github.com/users/" + username)
                 .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
                 .thenApplyAsync(result -> {
                     try {
