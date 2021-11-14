@@ -1,7 +1,6 @@
-<?php
-$request = 'https://api.github.com'
-?>
 
+@(searchForm : Form[Search])
+@import helper._
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +18,11 @@ $request = 'https://api.github.com'
  	<div class=" background-secondary main-search">
             <div class="wrap">
                 <div class="search">
-                    <input type="text" class="searchTerm" placeholder="Search for your Repository...">
-                    <button type="submit" class="searchButton">Go</button>
+                    @helper.form(action = routes.HomeController.getSearchResult()){
+                        @helper.inputText(searchForm("searchResult"))
+                        <input type="submit" value="Search...">
+                    }
+
                 </div>
             </div>
   	<div>
