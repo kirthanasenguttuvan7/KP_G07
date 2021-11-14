@@ -1,10 +1,17 @@
-@(name : String)
+@import model.UserProfileModel
+@(user : UserProfileModel)
 <html>
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/userProfileStyle.css")">
 	<head>
 		<title>Welcome User</title>
 	</head>
 	<body class = "background">
-		Welcome @name!!
+		<div class="container">
+    <div class="main-body" style = "display:flex">
+          <!-- /Breadcrumb -->
+    Welcome @user.getLogin
+        </div>
+    </div>
 	</body>
 </html>
