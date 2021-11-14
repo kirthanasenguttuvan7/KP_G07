@@ -47,7 +47,6 @@ public class UserProfileController extends Controller {
                     	JsonNode rootNode = result.asJson();
                     	ObjectMapper objectMapper = new ObjectMapper();
                         UserProfileModel userProfile = objectMapper.readValue(rootNode.toString(), UserProfileModel.class);
-                        System.out.println(userProfile.getLogin());
                         return ok(UserProfile.render(userProfile));
                     }
                     catch(Exception e) {

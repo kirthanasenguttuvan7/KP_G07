@@ -1,16 +1,58 @@
 package model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Repositories {
 
 	private String name;
 	private int id;
 	private String node_id;
-	private String fullname;
+	private String watchers;
+	private String default_branch;
+	private int score;
+	
+	public String getWatchers() {
+		return watchers;
+	}
+
+	public void setWatchers(String watchers) {
+		this.watchers = watchers;
+	}
+
+	private String full_name;
+	public String getFull_name() {
+		return full_name;
+	}
+
+	public void setFull_name(String full_name) {
+		this.full_name = full_name;
+	}
+
+	@JsonProperty("private")
 	private boolean repotype;
 	private UserProfileModel owner;
 	private String html_url;
 	private String description;
-	private boolean fork;
+	private String forks;
+	private String fork;
+	public String getFork() {
+		return fork;
+	}
+
+	public void setFork(String fork) {
+		this.fork = fork;
+	}
+
+	public String getForks() {
+		return forks;
+	}
+
+	public void setForks(String forks) {
+		this.forks = forks;
+	}
+
 	private String url;
 	private String forks_url;
 	private String keys_url;
@@ -24,7 +66,8 @@ public class Repositories {
 	private String tags_url;
 	private String blobs_url;
 	private String git_tags_url;
-	private String git_refes_url;
+	@JsonProperty("git_refs_url")
+	private String git_refs_url;
 	private String trees_url;
 	private String statuses_url;
 	public int getId() {
@@ -41,14 +84,6 @@ public class Repositories {
 
 	public void setNode_id(String node_id) {
 		this.node_id = node_id;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
 	}
 
 	public boolean isRepotype() {
@@ -81,14 +116,6 @@ public class Repositories {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public boolean isFork() {
-		return fork;
-	}
-
-	public void setFork(boolean fork) {
-		this.fork = fork;
 	}
 
 	public String getUrl() {
@@ -196,11 +223,11 @@ public class Repositories {
 	}
 
 	public String getGit_refes_url() {
-		return git_refes_url;
+		return git_refs_url;
 	}
 
 	public void setGit_refes_url(String git_refes_url) {
-		this.git_refes_url = git_refes_url;
+		this.git_refs_url = git_refes_url;
 	}
 
 	public String getTrees_url() {
@@ -244,11 +271,11 @@ public class Repositories {
 	}
 
 	public String getSubscribes_url() {
-		return subscribes_url;
+		return subscribers_url;
 	}
 
-	public void setSubscribes_url(String subscribes_url) {
-		this.subscribes_url = subscribes_url;
+	public void setSubscribes_url(String subscribers_url) {
+		this.subscribers_url = subscribers_url;
 	}
 
 	public String getSubscription_url() {
@@ -363,13 +390,6 @@ public class Repositories {
 		this.releases_url = releases_url;
 	}
 
-	public String getDeployment_url() {
-		return deployment_url;
-	}
-
-	public void setDeployment_url(String deployment_url) {
-		this.deployment_url = deployment_url;
-	}
 
 	public String getCreated_at() {
 		return created_at;
@@ -547,14 +567,6 @@ public class Repositories {
 		this.open_issues_count = open_issues_count;
 	}
 
-	public boolean isLicense() {
-		return license;
-	}
-
-	public void setLicense(boolean license) {
-		this.license = license;
-	}
-
 	public boolean isAllow_forking() {
 		return allow_forking;
 	}
@@ -571,19 +583,37 @@ public class Repositories {
 		this.is_template = is_template;
 	}
 
-	public TopicsModel getTopics() {
-		return topics;
-	}
-
-	public void setTopics(TopicsModel topics) {
-		this.topics = topics;
-	}
-
 	private String languages_url;
 	private String stargazers_url;
 	private String contributors_url;
-	private String subscribes_url;
+	@JsonProperty("subscribers_url")
+	private String subscribers_url;
 	private String subscription_url;
+	private String git_commits_url;
+	public String getGit_refs_url() {
+		return git_refs_url;
+	}
+
+	public void setGit_refs_url(String git_refs_url) {
+		this.git_refs_url = git_refs_url;
+	}
+
+	public String getSubscribers_url() {
+		return subscribers_url;
+	}
+
+	public void setSubscribers_url(String subscribers_url) {
+		this.subscribers_url = subscribers_url;
+	}
+
+	public String getGit_commits_url() {
+		return git_commits_url;
+	}
+
+	public void setGit_commits_url(String git_commits_url) {
+		this.git_commits_url = git_commits_url;
+	}
+
 	private String commits_url;
 	private String issue_comment_url;
 	private String contents_url;
@@ -597,7 +627,15 @@ public class Repositories {
 	private String notifications_url;
 	private String labels_url;
 	private String releases_url;
-	private String deployment_url;
+	private String deployments_url;
+	public String getDeployments_url() {
+		return deployments_url;
+	}
+
+	public void setDeployments_url(String deployments_url) {
+		this.deployments_url = deployments_url;
+	}
+
 	private String created_at;
 	private String updated_at;
 	private String pushed_at;
@@ -620,18 +658,53 @@ public class Repositories {
 	private boolean archived;
 	private boolean disabled;
 	private int open_issues_count;
-	private boolean license;
+	private String open_issues;
+	public String getOpen_issues() {
+		return open_issues;
+	}
+
+	public void setOpen_issues(String open_issues) {
+		this.open_issues = open_issues;
+	}
+
 	private boolean allow_forking;
 	private boolean is_template;
-	private TopicsModel topics;
-	
-		
-	
+	private String comments_url;
+	private LicenseModel license;
+	private List<String> topics;
+	private String visibility;
 
-	
-	
-	
-	
+	public String getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
+	}
+
+	public List<String> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<String> topics) {
+		this.topics = topics;
+	}
+
+	public LicenseModel getLicense() {
+		return license;
+	}
+
+	public void setLicense(LicenseModel license) {
+		this.license = license;
+	}
+
+	public String getComments_url() {
+		return comments_url;
+	}
+
+	public void setComments_url(String comments_url) {
+		this.comments_url = comments_url;
+	}
 
 	public String getName() {
 		return name;
@@ -639,5 +712,21 @@ public class Repositories {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDefault_branch() {
+		return default_branch;
+	}
+
+	public void setDefault_branch(String default_branch) {
+		this.default_branch = default_branch;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

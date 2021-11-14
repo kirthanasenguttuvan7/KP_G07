@@ -1,5 +1,7 @@
-
-@(searchForm : Form[Search])
+@import model.KeywordModel
+@import model.Repositories
+@import java.util
+@(searchForm : Form[KeywordModel], repos: util.List[Repositories])
 @import helper._
 <!DOCTYPE html>
 <html>
@@ -19,13 +21,18 @@
             <div class="wrap">
                 <div class="search">
                     @helper.form(action = routes.HomeController.getSearchResult()){
-                        @helper.inputText(searchForm("searchResult"))
-                        <input type="submit" value="Search...">
+                        <input type="text" id="keyword" name="keyword">
+                        <input type="submit" value="Search for the keyword">
                     }
 
                 </div>
             </div>
   	<div>
+  	<div>
+  	@for(repo <- repos) {
+        <li><a href="#">@repo.getFull_name</a></li>
+    }
+  	</div>
 </body>
 
 </html>

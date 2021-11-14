@@ -16,12 +16,12 @@ public boolean isIncomplete_results() {
 public void setIncomplete_results(boolean incomplete_results) {
 	this.incomplete_results = incomplete_results;
 }
-public ArrayList<String> getItems() {
+public ArrayList<Repositories> getItems() {
 	return items;
 }
-public void setItems(ArrayList<String> items) {
+public void setItems(ArrayList<Repositories> items) {
 	this.items = items;
 }
 private boolean incomplete_results;
-private ArrayList<String> items;
+private ArrayList<Repositories> items;
 }
