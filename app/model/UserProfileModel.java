@@ -19,6 +19,7 @@ public class UserProfileModel {
 	private String events_url;
 	private String received_events_url;
 	private String site_admin;
+	
 	private String name;
 	private String hireable;
 	private String bio;

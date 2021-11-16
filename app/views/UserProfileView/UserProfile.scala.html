@@ -1,5 +1,7 @@
 @import model.UserProfileModel
-@(user : UserProfileModel)
+@import model.Repositories
+@import java.util
+@(user : UserProfileModel, repos: String)
 <html>
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/userProfileStyle.css")">
@@ -51,6 +53,9 @@
                 </ul>
               </div>
             </div>
+          </div>
+          <div>
+          @repos
           </div>
         </div>
     </div>
