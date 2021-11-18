@@ -17,6 +17,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import model.UserProfileModel;
+import model.Repositories;
 /**
  * This controller contains an action to handle HTTP requests
  * to the user profile page.
@@ -24,6 +25,8 @@ import model.UserProfileModel;
 public class UserProfileController extends Controller {
 
 	private final WSClient ws;
+	List<Repositories> repos = new ArrayList<Repositories>();
+
 	private HttpExecutionContext httpExecutionContext;
 	
 	@Inject
@@ -38,7 +41,7 @@ public class UserProfileController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     
-    public CompletionStage<Result> userProfile(String username){
+    public CompletionStage<Result> userProfile(String username, String repositories){
     	
 		return ws.url("https://api.github.com/users/" + username)
                 .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
@@ -47,7 +50,7 @@ public class UserProfileController extends Controller {
                     	JsonNode rootNode = result.asJson();
                     	ObjectMapper objectMapper = new ObjectMapper();
                         UserProfileModel userProfile = objectMapper.readValue(rootNode.toString(), UserProfileModel.class);
-                        return ok(UserProfile.render(userProfile));
+        				return ok(UserProfile.render(userProfile, repositories));
                     }
                     catch(Exception e) {
                     	return ok(e.toString());
@@ -55,5 +58,27 @@ public class UserProfileController extends Controller {
                 }, httpExecutionContext.current());
     	
     }
+    
+    public CompletionStage<Result> getUserRepos(String username){
+    	return ws.url("https://api.github.com/users/" + username+"/repos")
+		.get()
+		.thenApplyAsync(resultRepos -> {
+			try {
+				JsonNode rootNode1 = resultRepos.asJson();
+				ObjectMapper objectMapper = new ObjectMapper();
+				repos = Arrays.asList(objectMapper.treeToValue(rootNode1,
+						Repositories[].class));
+				List<String> repoStrings = new ArrayList<String>();
+				for(Repositories repo: repos) {
+					repoStrings.add(repo.getFull_name().toString());
+				}
+				String repoArray = String.join(",", repoStrings);
+				return redirect(routes.UserProfileController.userProfile(username, repoArray));	
+			}
+			catch(Exception e) {
+				return ok(e.toString());
+			}
+		}, httpExecutionContext.current());
 
+    }
 }
