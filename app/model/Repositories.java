@@ -1,8 +1,11 @@
 package model;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class Repositories {
 
@@ -12,7 +15,79 @@ public class Repositories {
 	private String watchers;
 	private String default_branch;
 	private int score;
+	private UserProfileModel avatar_url;
+	private String[] user;
+    private int network_count;
+    private int subscribers_count;
+	public int getSubscribers_count() {
+		return subscribers_count;
+	}
+	public void setSubscribers_count(int subscribers_count) {
+		this.subscribers_count = subscribers_count;
+	}
+	public String getTemp_clone_token() {
+		return temp_clone_token;
+	}
+	public void setTemp_clone_token(String temp_clone_token) {
+		this.temp_clone_token = temp_clone_token;
+	}
+
+	private String repository_url;
+	public int getNetwork_count() {
+		return network_count;
+	}
+	public void setNetwork_count(int network_count) {
+		this.network_count = network_count;
+	}
+
+	private int number;
+	private String title;
+	private String temp_clone_token;
+
+
 	
+	
+
+	public String[] getUser() {
+		return user;
+	}
+	@JsonSetter("user")
+	public void setUser(String[] user) {
+		this.user = user;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public String getRepository_url() {
+		return repository_url;
+	}
+
+	public void setRepository_url(String repository_url) {
+		this.repository_url = repository_url;
+	}
+
+	public UserProfileModel getAvatar_url() {
+		return avatar_url;
+	}
+
+	public void setAvatar_url(UserProfileModel avatar_url) {
+		this.avatar_url = avatar_url;
+	}
+
 	public String getWatchers() {
 		return watchers;
 	}

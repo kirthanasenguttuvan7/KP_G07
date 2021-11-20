@@ -1,6 +1,7 @@
 package controllers.RepositoryIssuesController;
 
 import java.util.concurrent.CompletionStage;
+//import model.RepositoryIssuesUserModel.*;
 import Helper.WordStats;
 import java.util.concurrent.ExecutionException;
 
@@ -63,7 +64,8 @@ public class RepositoryIssuesController extends Controller {
                     	List<RepositoryIssuesModel> issueModel = new ArrayList<>(); 
                     	rootNode.forEach(items -> {
                 			 String issue_number = items.get("number").toString();
-                			 String issue_title = items.get("title").toString();
+                			 //String issue_title = items.get("title").toString();
+                			// RepositoryIssuesUserModel issue_owner = items.get("user");
                 			 String state = items.get("state").toString();
                 			 String created_at = items.get("created_at").toString();
                 			 String updated_at = items.get("updated_at").toString();

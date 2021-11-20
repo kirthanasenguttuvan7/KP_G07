@@ -14,3 +14,6 @@ GET		/userProfile				controllers.UserProfileController.UserProfileController.use
 
 GET     /topics/:keyword            controllers.TopicsController.TopicsController.getSearchResult(request: play.mvc.Http.Request, keyword: String)
 GET		/repositoryissues/repos/:username/:repositoryName/issues		controllers.RepositoryIssuesController.RepositoryIssuesController.repositoryIssues(username:String,repositoryName:String)
+
+
+GET     /repositoryProfile/:organization/:reponame                                    controllers.RepositoryProfileController.RepositoryProfileController.repositoryProfile(organization:String,reponame:String)
