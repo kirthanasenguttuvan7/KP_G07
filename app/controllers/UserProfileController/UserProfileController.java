@@ -21,6 +21,8 @@ import model.Repositories;
 /**
  * This controller contains an action to handle HTTP requests
  * to the user profile page.
+ * 
+ * @author Sayali Kulkarni 
  */
 public class UserProfileController extends Controller {
 
@@ -50,7 +52,9 @@ public class UserProfileController extends Controller {
                     	JsonNode rootNode = result.asJson();
                     	ObjectMapper objectMapper = new ObjectMapper();
                         UserProfileModel userProfile = objectMapper.readValue(rootNode.toString(), UserProfileModel.class);
-        				return ok(UserProfile.render(userProfile, repositories));
+                    	List<String> al = new ArrayList<String>();
+                    	al = Arrays.asList(repositories.split(","));
+        				return ok(UserProfile.render(userProfile, al));
                     }
                     catch(Exception e) {
                     	return ok(e.toString());

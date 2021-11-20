@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+
 import java.util.concurrent.CompletionStage;
 
 import play.data.Form;
@@ -24,12 +25,14 @@ import model.KeywordModel;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
+ * @author Sayali Kulkarni
  */
 public class HomeController extends Controller {
 
 	private final WSClient ws;
 	private HttpExecutionContext httpExecutionContext;
 	FormFactory formFactory;
+
 	
     /**
      * An action that renders an HTML page with a welcome message.
@@ -64,6 +67,7 @@ public class HomeController extends Controller {
 
                     	ObjectMapper objectMapper = new ObjectMapper();
                     	JsonNode rootNode = result.asJson();
+              		  		
                     	SearchModel searchResult = objectMapper.readValue(rootNode.toString(), SearchModel.class);
                     	List<Repositories> repos = searchResult.getItems();
                         return ok(index.render(formFactory.form(KeywordModel.class), repos));

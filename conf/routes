@@ -9,11 +9,12 @@ GET		/search						controllers.HomeController.getSearchResult(request: play.mvc.H
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET		/userProfile/:username		controllers.UserProfileController.UserProfileController.getUserRepos(username:String)
-GET		/userProfile				controllers.UserProfileController.UserProfileController.userProfile(username: String, repoArray: String)
-
 GET     /topics/:keyword            controllers.TopicsController.TopicsController.getSearchResult(request: play.mvc.Http.Request, keyword: String)
 GET		/repositoryissues/repos/:username/:repositoryName/issues		controllers.RepositoryIssuesController.RepositoryIssuesController.repositoryIssues(username:String,repositoryName:String)
 
 
 GET     /repositoryProfile/:organization/:reponame                                    controllers.RepositoryProfileController.RepositoryProfileController.repositoryProfile(organization:String,reponame:String)
+
+GET		/user						controllers.UserProfileController.UserProfileController.getUserRepos(username:String)
+GET		/userProfile				controllers.UserProfileController.UserProfileController.userProfile(username: String, repoArray: String)
+

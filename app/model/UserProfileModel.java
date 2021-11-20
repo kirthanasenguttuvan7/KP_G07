@@ -1,7 +1,11 @@
 package model;
 
 import java.util.List;
-
+/**
+ * 
+ * @author Sayali Kulkarni
+ *
+ */
 public class UserProfileModel {
 	private int id;
 	private String node_id;
