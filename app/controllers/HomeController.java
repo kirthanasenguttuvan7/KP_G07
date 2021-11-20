@@ -25,7 +25,7 @@ import model.KeywordModel;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
- * @author Sayali Kulkarni
+ * @author Sayali Kulkarni, Kirthana Senguttuvan
  */
 public class HomeController extends Controller {
 
@@ -33,14 +33,6 @@ public class HomeController extends Controller {
 	private HttpExecutionContext httpExecutionContext;
 	FormFactory formFactory;
 
-	
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
-	
 	  public Result index() {
 		  List<Repositories> repo = new ArrayList<>();
 		  return ok(index.render(formFactory.form(KeywordModel.class), repo)); 
@@ -53,13 +45,17 @@ public class HomeController extends Controller {
 		this.formFactory = formFactory;
 	}
     
-    public CompletionStage<Result> getSearchResult(Http.Request request){
+    public Result getSearchResult(Http.Request request){
     	
     	Form<KeywordModel> searchForm = formFactory.form(KeywordModel.class).bindFromRequest(request);
     	KeywordModel keywordModel = searchForm.get();
     	String keyword = keywordModel.getKeyword();
+    	return redirect(routes.HomeController.getSearch(keyword));
     	
-		return ws.url("https://api.github.com/search/repositories")
+	}
+
+    public CompletionStage<Result> getSearch(String keyword){
+    	return ws.url("https://api.github.com/search/repositories")
 				.addQueryParameter("q", keyword)
                 .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
                 .thenApplyAsync(result -> {
@@ -77,6 +73,6 @@ public class HomeController extends Controller {
                     }
                 }, httpExecutionContext.current());
     	
-    }
 
+    }
 }
