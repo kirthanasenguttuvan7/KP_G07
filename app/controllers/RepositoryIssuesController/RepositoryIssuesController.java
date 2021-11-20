@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import play.mvc.*;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.TypeKey;
@@ -19,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-import play.api.libs.json.Json;
+import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import javax.inject.Inject;
 import play.libs.ws.WSClient;
@@ -81,8 +80,18 @@ public class RepositoryIssuesController extends Controller {
                     	for(String item :finalStats.keySet()) {
                     		System.out.println(item.toString()+"-"+finalStats.get(item).toString());
                     	}
-                    	String yourMap = Json.stringify(Json.toJson(finalStats));
-                    	return ok(RepositoryIssues.render());
+                    	StringBuilder htmlBuilder = new StringBuilder();
+                    	htmlBuilder.append("<table border=\"1\">");
+
+                    	for (Map.Entry<String, Integer> entry : finalStats.entrySet()) {
+                    	    htmlBuilder.append(String.format("<tr><td>%s</td><td>%d</td></tr>",
+                    	            entry.getKey(), entry.getValue()));
+                    	}
+
+                    	htmlBuilder.append("</table>");
+
+                    	String html = htmlBuilder.toString();
+                    	return ok(RepositoryIssues.render(html));
                     }
                     catch(Exception e) {
                     	return ok(e.toString());
