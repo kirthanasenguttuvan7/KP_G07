@@ -6,6 +6,9 @@ import java.util.concurrent.CompletionStage;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Helper.CacheController;
+import java.util.stream.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,10 +35,11 @@ public class HomeController extends Controller {
 	private final WSClient ws;
 	private HttpExecutionContext httpExecutionContext;
 	FormFactory formFactory;
+	private static CacheController cache = new CacheController();
 
 	  public Result index() {
-		  List<Repositories> repo = new ArrayList<>();
-		  return ok(index.render(formFactory.form(KeywordModel.class), repo)); 
+		  Map<String, List<Repositories>> cacheMap = new HashMap<>();
+		  return ok(index.render(formFactory.form(KeywordModel.class), cacheMap)); 
 	  }
 	 
 	@Inject
@@ -65,8 +69,10 @@ public class HomeController extends Controller {
                     	JsonNode rootNode = result.asJson();
               		  		
                     	SearchModel searchResult = objectMapper.readValue(rootNode.toString(), SearchModel.class);
-                    	List<Repositories> repos = searchResult.getItems();
-                        return ok(index.render(formFactory.form(KeywordModel.class), repos));
+                    	List<Repositories> repos = searchResult.getItems().stream().limit(10).collect(Collectors.toList());
+                    	cache.setCache(keyword, repos);
+                    	Map<String, List<Repositories>> cacheMap = cache.get_cache();
+                        return ok(index.render(formFactory.form(KeywordModel.class), cacheMap));
                     }
                     catch(Exception e) {
                     	return ok(e.toString());
