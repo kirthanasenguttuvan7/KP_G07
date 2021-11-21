@@ -34,6 +34,11 @@ public class RepositoryIssuesController extends Controller {
 	private String created_at;
 	private String updated_at;
 	
+	/**
+	 * Constructor to initialize WsClient and HttpExecutionContext
+	 * @param ws  Parameter to get WSClient Object
+	 * @param httpExecutionContext Parameter to get HttpExecutionContext
+	 */
 	@Inject
 	RepositoryIssuesController(WSClient ws, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
@@ -45,7 +50,12 @@ public class RepositoryIssuesController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    
+    /**
+     * 
+     * @param username      User Name of the repository passed from profile 
+     * @param repositoryName  Repository Name passed from profile
+     * @return CompletionStage<Result> to render html page under view
+     */
     public CompletionStage<Result> repositoryIssues(String username, String repositoryName){
 		return ws.url("https://api.github.com/repos/" + username+"/"+repositoryName+"/"+"issues")
 				.get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
@@ -53,7 +63,7 @@ public class RepositoryIssuesController extends Controller {
                     try {
                     	JsonNode rootNode = result.asJson();
                     	List<RepositoryIssuesModel> issueModel = new ArrayList<>(); 
-                    	rootNode.forEach(items -> {
+                    	rootNode.forEach(items -> { // DESERIALIZING THE NECESSARY VALUES FROM API
                 			 String issue_number = items.get("number").toString();
                 			 String issue_title = items.get("title").toString();
                 			 String state = items.get("state").toString();
@@ -66,9 +76,12 @@ public class RepositoryIssuesController extends Controller {
                     		titles.add(items.getIssue_title());
                     		
                     	});
-                    	WordStats stats = new WordStats();
+                    	WordStats stats = new WordStats(); // PERFORMING WORD LEVEL STATISTIC ON THE SPLIT TITLES
                     	Map<String, Integer> finalStats = new HashMap<String, Integer>();
                     	finalStats = stats.countWords(titles);
+                    	/**
+                    	 * CREATING A StringBuilder OBJECT TO AS HTML TO RENDER THE CONTENT DIRECTLY TO THE VIEW
+                    	 */
                     	StringBuilder htmlBuilder = new StringBuilder();
                     	htmlBuilder.append("<table border = \"1\">");
 
