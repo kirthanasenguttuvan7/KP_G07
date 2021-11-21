@@ -55,7 +55,7 @@ public class RepositoryProfileControllerTest extends WithBrowser {
       ws = play.test.WSTestClient.newClient(server.httpPort());
       formFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
       ec = new GuiceApplicationBuilder().injector().instanceOf(HttpExecutionContext.class);
-      client = new RepositoryIssuesController(ws, ec);
+      client = new RepositoryProfileController(ws, ec);
     }
 
     @After
