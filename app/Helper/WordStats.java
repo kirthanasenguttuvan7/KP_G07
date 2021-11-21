@@ -16,21 +16,6 @@ import controllers.RepositoryIssuesController.*;
 public class WordStats {
 	
 	public Map<String, Integer> countWords(List<String> titles) {
-//		Map<String, Integer> countMap =  new HashMap<String,Integer>();
-//		for(String title : titles) {
-//			if(!(title == null || title.isEmpty())){
-//				String[] parts = title.split("[\\s+\",-.\\|!]");
-//				for(String part : parts) {
-//					if(!countMap.containsKey(part.toLowerCase())) {
-//						countMap.put(part.toLowerCase(), 1);
-//				}
-//					else {
-//						countMap.put(part.toLowerCase(), countMap.get(part.toLowerCase()) + 1);
-//					}
-//				
-//				}
-//		}
-//	  }
 		List<String> parts = new ArrayList();
 		for(String title : titles) {
 			if(!(title == null || title.isEmpty())){
@@ -45,7 +30,8 @@ public class WordStats {
 				.collect(
                     Collectors.toMap(
                         w -> w, w -> 1, Integer::sum));
-		return counts.entrySet().stream()
+		return counts
+				.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
 						(oldValue, newValue) -> oldValue, LinkedHashMap::new));

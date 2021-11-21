@@ -1,37 +1,29 @@
 package controllers.RepositoryIssuesController;
 
-import java.util.concurrent.CompletionStage;
-//import model.RepositoryIssuesUserModel.*;
-import Helper.WordStats;
-import java.util.concurrent.ExecutionException;
-
-import play.mvc.*;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.TypeKey;
-
-import views.html.RepositoryIssuesView.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
-import play.libs.Json;
-import play.libs.concurrent.HttpExecutionContext;
 import javax.inject.Inject;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import Helper.WordStats;
+import model.RepositoryIssuesModel;
+import play.libs.concurrent.HttpExecutionContext;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
-import model.RepositoryIssuesModel;
-import model.UserProfileModel;
+import views.html.RepositoryIssuesView.*;
 /**
  * This controller contains an action to handle HTTP requests
  * to the user profile page.
+ * * 
+ * @author Kirthana Senguttuvan 
  */
+ 
 public class RepositoryIssuesController extends Controller {
 
 	private final WSClient ws;
@@ -55,7 +47,6 @@ public class RepositoryIssuesController extends Controller {
      */
     
     public CompletionStage<Result> repositoryIssues(String username, String repositoryName){
-    	System.out.println(username+ " - "+ repositoryName);
 		return ws.url("https://api.github.com/repos/" + username+"/"+repositoryName+"/"+"issues")
 				.get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
                 .thenApplyAsync(result -> {
@@ -64,33 +55,29 @@ public class RepositoryIssuesController extends Controller {
                     	List<RepositoryIssuesModel> issueModel = new ArrayList<>(); 
                     	rootNode.forEach(items -> {
                 			 String issue_number = items.get("number").toString();
-                			 //String issue_title = items.get("title").toString();
-                			// RepositoryIssuesUserModel issue_owner = items.get("user");
+                			 String issue_title = items.get("title").toString();
                 			 String state = items.get("state").toString();
                 			 String created_at = items.get("created_at").toString();
                 			 String updated_at = items.get("updated_at").toString();
                 			 issueModel.add(new RepositoryIssuesModel(issue_number,issue_title,state,created_at,updated_at));
                 		 });
-//                    	System.out.println(issueModel.get(0).getIssue_title());
                     	List<String> titles = new ArrayList<>();
                     	issueModel.forEach(items->{
                     		titles.add(items.getIssue_title());
+                    		
                     	});
                     	WordStats stats = new WordStats();
                     	Map<String, Integer> finalStats = new HashMap<String, Integer>();
                     	finalStats = stats.countWords(titles);
-                    	for(String item :finalStats.keySet()) {
-                    		System.out.println(item.toString()+"-"+finalStats.get(item).toString());
-                    	}
                     	StringBuilder htmlBuilder = new StringBuilder();
-                    	htmlBuilder.append("<table border=\"1\">");
+                    	htmlBuilder.append("<table border = \"1\">");
 
                     	for (Map.Entry<String, Integer> entry : finalStats.entrySet()) {
                     	    htmlBuilder.append(String.format("<tr><td>%s</td><td>%d</td></tr>",
                     	            entry.getKey(), entry.getValue()));
                     	}
 
-                    	htmlBuilder.append("</table>");
+                    	htmlBuilder.append("</table >");
 
                     	String html = htmlBuilder.toString();
                     	return ok(RepositoryIssues.render(html));
