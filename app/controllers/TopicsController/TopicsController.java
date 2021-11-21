@@ -12,6 +12,7 @@ import views.html.UserProfileView.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 import play.libs.concurrent.HttpExecutionContext;
 import javax.inject.Inject;
@@ -46,7 +47,7 @@ public class TopicsController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
 
-    public CompletionStage<Result> getSearchResult(Http.Request request, String keyword){
+    public CompletionStage<Result> getSearchResult(String keyword){
 
 
         return ws.url("https://api.github.com/search/repositories?q=topic:"+keyword)
@@ -57,7 +58,7 @@ public class TopicsController extends Controller {
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode rootNode = result.asJson();
                         SearchModel searchResult = objectMapper.readValue(rootNode.toString(), SearchModel.class);
-                        List<Repositories> repos = searchResult.getItems();
+                        List<Repositories> repos = searchResult.getItems().stream().limit(10).collect(Collectors.toList());
                         return ok(TopicsView.render(repos));
                     }
                     catch(Exception e) {

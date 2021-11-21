@@ -35,7 +35,7 @@
           </div>
           
           <div style="padding: 0px 20px 20px 20px;"><h2> List of Public Repositories</h2>@for(repo <- repos){
-          <li><a href="#" style="color: lightblue;">@repo</a></li>
+          <li><a href="@controllers.RepositoryProfileController.routes.RepositoryProfileController.repositoryProfile(user.getLogin, repo)" style="color: lightblue;">@repo</a></li>
           ----------------------------------------------------------------------------------------------------------------
           <br><br>
           }</div>

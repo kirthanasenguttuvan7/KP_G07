@@ -1,7 +1,11 @@
 package model;
 
 import java.util.ArrayList;
-
+/**
+ * Model for the common search
+ * @author Sayali Kulkarni
+ *
+ */
 public class SearchModel {
 private int total_count;
 public int getTotal_count() {

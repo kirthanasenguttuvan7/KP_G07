@@ -12,40 +12,40 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import controllers.RepositoryIssuesController.*;
-
+/**
+ * Class to perform word level statistics of the titles on the 
+ * Repository Issues API.
+ * 
+ * @author Kirthana Senguttuvan
+ * 
+ *
+ */
 public class WordStats {
-	
+	/**
+	 * 
+	 * @param titles   titles passed from the api
+	 * @return Returns words and corresponding counts as a Map object
+	 */
 	public Map<String, Integer> countWords(List<String> titles) {
-//		Map<String, Integer> countMap =  new HashMap<String,Integer>();
-//		for(String title : titles) {
-//			if(!(title == null || title.isEmpty())){
-//				String[] parts = title.split("[\\s+\",-.\\|!]");
-//				for(String part : parts) {
-//					if(!countMap.containsKey(part.toLowerCase())) {
-//						countMap.put(part.toLowerCase(), 1);
-//				}
-//					else {
-//						countMap.put(part.toLowerCase(), countMap.get(part.toLowerCase()) + 1);
-//					}
-//				
-//				}
-//		}
-//	  }
 		List<String> parts = new ArrayList();
 		for(String title : titles) {
 			if(!(title == null || title.isEmpty())){
+				//SPLITTING THE TITLES INTO INDIVIDUAL WORDS FOR STATS
 				String[] part = (title.split("[\\s+\",-.\\|!\\[\\]]"));
 				for(String p : part)
 					parts.add(p.toLowerCase());
 			}
 		}
+		// PERFROMING COUNT ON WORDS
 		Map<String, Integer> counts =
 				parts.stream()
 				.filter(i -> !i.isEmpty())
 				.collect(
                     Collectors.toMap(
                         w -> w, w -> 1, Integer::sum));
-		return counts.entrySet().stream()
+		//SORTING THE RESULT IN DESCENDING ORDER AS PER THE REQUIREMENT
+		return counts
+				.entrySet().stream()
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
 						(oldValue, newValue) -> oldValue, LinkedHashMap::new));
