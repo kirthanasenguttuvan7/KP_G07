@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 /**
- * 
+ * Model for the User Profile Page
  * @author Sayali Kulkarni
  *
  */
