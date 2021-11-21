@@ -47,7 +47,7 @@ public class TopicsController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
 
-    public CompletionStage<Result> getSearchResult(Http.Request request, String keyword){
+    public CompletionStage<Result> getSearchResult(String keyword){
 
 
         return ws.url("https://api.github.com/search/repositories?q=topic:"+keyword)

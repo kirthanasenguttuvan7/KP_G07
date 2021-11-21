@@ -40,7 +40,7 @@ public class RepositoryIssuesController extends Controller {
 	 * @param httpExecutionContext Parameter to get HttpExecutionContext
 	 */
 	@Inject
-	RepositoryIssuesController(WSClient ws, HttpExecutionContext httpExecutionContext){
+	public RepositoryIssuesController(WSClient ws, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
 		this.httpExecutionContext = httpExecutionContext;
 	}

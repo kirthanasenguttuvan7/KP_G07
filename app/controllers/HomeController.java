@@ -28,6 +28,7 @@ import model.KeywordModel;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
+ * It handles the actions on the search page
  * @author Sayali Kulkarni, Kirthana Senguttuvan
  */
 public class HomeController extends Controller {
@@ -41,14 +42,23 @@ public class HomeController extends Controller {
 		  Map<String, List<Repositories>> cacheMap = new HashMap<>();
 		  return ok(index.render(formFactory.form(KeywordModel.class), cacheMap)); 
 	  }
-	 
+	 /**
+	  * The constructor injects the necessary dependancies for the class
+	  * @param ws
+	  * @param httpExecutionContext
+	  * @param formFactory
+	  */
 	@Inject
 	HomeController(WSClient ws, HttpExecutionContext httpExecutionContext, FormFactory formFactory){
 		this.ws = ws;
 		this.httpExecutionContext = httpExecutionContext;
 		this.formFactory = formFactory;
 	}
-    
+    /**
+     * Extracts the keyword from the UI
+     * @param request
+     * @return Result
+     */
     public Result getSearchResult(Http.Request request){
     	
     	Form<KeywordModel> searchForm = formFactory.form(KeywordModel.class).bindFromRequest(request);
@@ -58,6 +68,11 @@ public class HomeController extends Controller {
     	
 	}
 
+    /**
+     * Renders the searched keyword with it's username, repositories and topics
+     * @param keyword
+     * @return
+     */
     public CompletionStage<Result> getSearch(String keyword){
     	return ws.url("https://api.github.com/search/repositories")
 				.addQueryParameter("q", keyword)
