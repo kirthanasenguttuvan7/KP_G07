@@ -35,7 +35,7 @@
             &nbsp;<h3>@mapElement.getKey()</h3>
             <ol>
             @for(repo <- mapElement.getValue()){
-            	<li>User: <a style="color:lightblue" href="@controllers.UserProfileController.routes.UserProfileController.getUserRepos(repo.getOwner.getLogin)">@repo.getOwner.getLogin</a> Repository: <a style="color:lightblue" href="@controllers.RepositoryProfileController.routes.RepositoryProfileController.repositoryProfile(repo.getOwner.getLogin, repo.getName)">@repo.getFull_name</a> Topic: @for(topic <- repo.getTopics){<a style="color:lightblue" href="@controllers.TopicsController.routes.TopicsController.getSearchResult(topic)"> @topic </a> &nbsp;}</li>
+            	<li>User: <a style="color:lightblue" href="@controllers.UserProfileController.routes.UserProfileController.getUserRepos(repo.getOwner.getLogin)">@repo.getOwner.getLogin</a> Repository: <a style="color:lightblue" href="@controllers.RepositoryProfileController.routes.RepositoryProfileController.getCollaborators(repo.getOwner.getLogin, repo.getName)">@repo.getFull_name</a> Topic: @for(topic <- repo.getTopics){<a style="color:lightblue" href="@controllers.TopicsController.routes.TopicsController.getSearchResult(topic)"> @topic </a> &nbsp;}</li>
     		}
             </ol>
     }

@@ -18,11 +18,18 @@ public class Repositories {
 	private String avatar_url;
 	private String message;
 	private String documentation_url;
+	private ContributionsModel getLogin;
 	public String getDocumentation_url() {
 		return documentation_url;
 	}
 	public void setDocumentation_url(String documentation_url) {
 		this.documentation_url = documentation_url;
+	}
+	public ContributionsModel getGetLogin() {
+		return getLogin;
+	}
+	public void setGetLogin(ContributionsModel getLogin) {
+		this.getLogin = getLogin;
 	}
 	public String getMessage() {
 		return message;
@@ -132,6 +139,8 @@ public class Repositories {
 	private String html_url;
 	private String description;
 	private String forks;
+	
+
 	private String fork;
 	public String getFork() {
 		return fork;
@@ -825,4 +834,5 @@ public class Repositories {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	
 }

@@ -4,21 +4,19 @@
 @import model.TopicsModel
 @import model.ContributionsModel
  @import java.util
-@(repos: Repositories,issue:String)
-
-
-
-
-
+ 
+@(repos: Repositories,organization:String,collabArray:String)
 
 
 <html>
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/userProfileStyle.css")"> 
+	
 	
 	<head>
 		<title>Repository Details</title>
 	</head>
-	<body class = "background" style="background: #1a202c;color: #FFFFFF;">
+	<body class = "background">
 		<div class="container">
     <div class="main-body" style = "display:flex">
           <!-- /Breadcrumb -->
@@ -39,8 +37,18 @@
                       <p class="text-secondary mb-1">Number of Watchers : @repos.getWatchers_count</p>
                        <p class="text-secondary mb-1">Number of Forks : @repos.getForks_count</p>
                         <p class="text-secondary mb-1">Number of Open Issues :@repos.getOpen_issues_count</p>
-                       
+                       <h2>Contributors</center></h2>
+                      
+       
+                @for( C<- collabArray.split(",")){
+          <li><a href="@controllers.UserProfileController.routes.UserProfileController.getUserRepos(C)" style="color: lightblue;">@C</a></li>
+            
+           
+           }
+           
 
+
+            
          
                        
                         </div>

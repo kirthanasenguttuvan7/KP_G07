@@ -14,8 +14,10 @@ GET     /topics/:keyword            controllers.TopicsController.TopicsControlle
 GET		/repositoryissues/repos/:username/:repositoryName/issues		controllers.RepositoryIssuesController.RepositoryIssuesController.repositoryIssues(username:String,repositoryName:String)
 
 
-GET     /repositoryProfile/:organization/:reponame                                    controllers.RepositoryProfileController.RepositoryProfileController.repositoryProfile(organization:String,reponame:String)
 
 GET		/user						controllers.UserProfileController.UserProfileController.getUserRepos(username:String)
 GET		/userProfile				controllers.UserProfileController.UserProfileController.userProfile(username: String, repoArray: String)
 
+GET     /issues/:organization/:reponame       controllers.RepositoryProfileController.RepositoryProfileController.getRepoIssues(organization:String,reponame:String)
+GET 	/contributions/:organization/:reponame			controllers.RepositoryProfileController.RepositoryProfileController.getCollaborators(organization:String,reponame:String)
+GET 	/repositoryProfile	    controllers.RepositoryProfileController.RepositoryProfileController.repositoryProfile(organization:String,reponame:String, collabArray:String)
