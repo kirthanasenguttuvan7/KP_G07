@@ -31,18 +31,23 @@ public class UserProfileController extends Controller {
 
 	private HttpExecutionContext httpExecutionContext;
 	
+	/**
+	 * The constructor injects the necessary dependencies for the class
+	 * @param ws
+	 * @param httpExecutionContext
+	 */
 	@Inject
-	UserProfileController(WSClient ws, HttpExecutionContext httpExecutionContext){
+	public UserProfileController(WSClient ws, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
 		this.httpExecutionContext = httpExecutionContext;
 	}
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
     
+	/**
+	 * It renders the User Profile details for a particular user
+	 * @param username
+	 * @param repositories
+	 * @return
+	 */
     public CompletionStage<Result> userProfile(String username, String repositories){
     	
 		return ws.url("https://api.github.com/users/" + username)
@@ -63,6 +68,11 @@ public class UserProfileController extends Controller {
     	
     }
     
+    /**
+     * It fetches the repositories for the particular user
+     * @param username
+     * @return
+     */
     public CompletionStage<Result> getUserRepos(String username){
     	return ws.url("https://api.github.com/users/" + username+"/repos")
 		.get()

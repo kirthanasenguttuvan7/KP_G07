@@ -12,7 +12,7 @@ import play.mvc.Result;
 import play.test.WithApplication;
 import play.test.WithBrowser;
 import akka.util.ByteString;
-import controllers.RepositoryProfileController.RepositoryProfileController;
+
 import java.util.concurrent.TimeUnit;
 import static play.mvc.Results.ok;
 import play.libs.Json;
@@ -27,14 +27,15 @@ import play.libs.ws.WSClient;
 import play.routing.RoutingDsl;
 import play.server.Server;
 import java.io.IOException;
+import controllers.RepositoryIssuesController.*;
 
-public class RepositoryProfileControllerTest extends WithBrowser {
+public class RepositoryIssuesControllerTest extends WithBrowser {
 	
 	private WSClient ws;
     private Server server;
     private FormFactory formFactory;
     private HttpExecutionContext ec;
-    private RepositoryProfileController client;
+    private RepositoryIssuesController client;
 
     @Before
     public void setup() {
@@ -55,7 +56,7 @@ public class RepositoryProfileControllerTest extends WithBrowser {
       ws = play.test.WSTestClient.newClient(server.httpPort());
       formFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
       ec = new GuiceApplicationBuilder().injector().instanceOf(HttpExecutionContext.class);
-      client = new RepositoryProfileController(ws, ec);
+      client = new RepositoryIssuesController(ws, ec);
     }
 
     @After
@@ -68,13 +69,13 @@ public class RepositoryProfileControllerTest extends WithBrowser {
     }
     
     @Test
-    public void repositoryProfile() throws Exception {
-    	Result result = client.getRepoIssues("octocat","Hello-World")
+    public void repositoryIssues() throws Exception {
+    	Result result = client.repositoryIssues("octocat","Hello-World")
         .toCompletableFuture().get(10, TimeUnit.SECONDS);
     	HttpEntity httpEntity = result.body();
         HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
         ByteString body = httpEntityStrict.data();
         String stringBody = body.utf8String();
-        assertThat(stringBody, containsString("<li>User: <a style=\"color:lightblue\" href=\"/user?username=yangxi0126\">yangxi0126</a> Repository: <a style=\"color:lightblue\" href=\"/repositoryProfile/yangxi0126/javaScript\">yangxi0126/javaScript</a> Topic: </li>"));
+        assertThat(stringBody, containsString("<li>User: <a href=\"/user?username=airbnb\">airbnb</a> Repository: <a href=\"#\">airbnb/javascript</a> Topic: <a href=\"#\"> arrow-functions </a><a href=\"#\"> es2015 </a><a href=\"#\"> es2016 </a><a href=\"#\"> es2017 </a><a href=\"#\"> es2018 </a><a href=\"#\"> es6 </a><a href=\"#\"> eslint </a><a href=\"#\"> javascript </a><a href=\"#\"> linting </a><a href=\"#\"> naming-conventions </a><a href=\"#\"> style-guide </a><a href=\"#\"> style-linter </a><a href=\"#\"> styleguide </a><a href=\"#\"> tc39 </a></li>"));
     }
 }

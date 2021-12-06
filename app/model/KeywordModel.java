@@ -1,6 +1,11 @@
 package model;
 
 import play.data.validation.Constraints;
+/**
+ * Model to get the search keyword from the UI
+ * @author Sayali Kulkarni
+ *
+ */
 public class KeywordModel {
 
 	@Constraints.Required

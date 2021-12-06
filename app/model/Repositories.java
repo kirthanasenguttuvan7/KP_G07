@@ -15,7 +15,43 @@ public class Repositories {
 	private String watchers;
 	private String default_branch;
 	private int score;
-	private UserProfileModel avatar_url;
+	private String avatar_url;
+	private String message;
+	private String documentation_url;
+	private ContributionsModel getLogin;
+	public String getDocumentation_url() {
+		return documentation_url;
+	}
+	public void setDocumentation_url(String documentation_url) {
+		this.documentation_url = documentation_url;
+	}
+	public ContributionsModel getGetLogin() {
+		return getLogin;
+	}
+	public void setGetLogin(ContributionsModel getLogin) {
+		this.getLogin = getLogin;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	private String organization;
+	public String getOrganization() {
+		return organization;
+	}
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+	public String getAvatar_url() {
+		return avatar_url;
+	}
+	public void setAvatar_url(String avatar_url) {
+		this.avatar_url = avatar_url;
+	}
+
 	private String[] user;
     private int network_count;
     private int subscribers_count;
@@ -80,14 +116,6 @@ public class Repositories {
 		this.repository_url = repository_url;
 	}
 
-	public UserProfileModel getAvatar_url() {
-		return avatar_url;
-	}
-
-	public void setAvatar_url(UserProfileModel avatar_url) {
-		this.avatar_url = avatar_url;
-	}
-
 	public String getWatchers() {
 		return watchers;
 	}
@@ -111,6 +139,8 @@ public class Repositories {
 	private String html_url;
 	private String description;
 	private String forks;
+	
+
 	private String fork;
 	public String getFork() {
 		return fork;
@@ -804,4 +834,5 @@ public class Repositories {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	
 }

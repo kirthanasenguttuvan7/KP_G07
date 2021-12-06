@@ -4,16 +4,14 @@
 @import model.TopicsModel
 @import model.ContributionsModel
  @import java.util
-@(repos: Repositories,issue:String)
-
-
-
-
-
+ 
+@(repos: Repositories,organization:String,collabArray:String)
 
 
 <html>
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/userProfileStyle.css")"> 
+	
 	
 	<head>
 		<title>Repository Details</title>
@@ -30,17 +28,27 @@
                   
                     <div class="mt-3">
                      <h2>Repository Profile</center></h2>
-                      <img src="@repos.getAvatar_url" alt="Admin" alt="avatar">
+                      <img src="@repos.getOwner.getAvatar_url" alt="Admin" alt="avatar">
                       <p class="text-secondary mb-1">Repository Name : @repos.getName</p>
-                      <p class="text-secondary mb-1">Owner : @repos.getOwner</p>
+                      <p class="text-secondary mb-1">Owner : @repos.getOwner.getLogin</p>
                       <p class="text-secondary mb-1">Description : @repos.getDescription</p>
                       <p class="text-secondary mb-1">Created Date : @repos.getCreated_at</p>
                       <p class="text-secondary mb-1">Last Updated At : @repos.getUpdated_at</p>
                       <p class="text-secondary mb-1">Number of Watchers : @repos.getWatchers_count</p>
                        <p class="text-secondary mb-1">Number of Forks : @repos.getForks_count</p>
                         <p class="text-secondary mb-1">Number of Open Issues :@repos.getOpen_issues_count</p>
-                       
+                       <h2>Contributors</center></h2>
+                      
+       
+                @for( C<- collabArray.split(",")){
+          <li><a href="@controllers.UserProfileController.routes.UserProfileController.getUserRepos(C)" style="color: lightblue;">@C</a></li>
+            
+           
+           }
+           
 
+
+            
          
                        
                         </div>
