@@ -15,7 +15,7 @@ GET		/repositoryissues/repos/:username/:repositoryName/issues		controllers.Repos
 
 
 
-GET		/user						controllers.UserProfileController.UserProfileController.getUserRepos(username:String)
+GET		/user/:username						controllers.UserProfileController.UserProfileController.getUserRepos(username:String)
 GET		/userProfile				controllers.UserProfileController.UserProfileController.userProfile(username: String, repoArray: String)
 
 GET     /issues/:organization/:reponame       controllers.RepositoryProfileController.RepositoryProfileController.getRepoIssues(organization:String,reponame:String)
