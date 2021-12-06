@@ -83,8 +83,9 @@ public class RepositoryIssuesController extends Controller {
                     	 * CREATING A StringBuilder OBJECT TO AS HTML TO RENDER THE CONTENT DIRECTLY TO THE VIEW
                     	 */
                     	StringBuilder htmlBuilder = new StringBuilder();
+                    	htmlBuilder.append("<h1> Issue Stats </h1>");
                     	htmlBuilder.append("<table border = \"1\">");
-
+                    	htmlBuilder.append("<tr> <th>Word</th> <th>Count</th></tr>");
                     	for (Map.Entry<String, Integer> entry : finalStats.entrySet()) {
                     	    htmlBuilder.append(String.format("<tr><td>%s</td><td>%d</td></tr>",
                     	            entry.getKey(), entry.getValue()));
