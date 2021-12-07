@@ -20,4 +20,4 @@ GET		/userProfile				controllers.UserProfileController.UserProfileController.use
 
 GET     /issues/:organization/:reponame       controllers.RepositoryProfileController.RepositoryProfileController.getRepoIssues(organization:String,reponame:String)
 GET 	/contributions/:organization/:reponame			controllers.RepositoryProfileController.RepositoryProfileController.getCollaborators(organization:String,reponame:String)
-GET 	/repositoryProfile	    controllers.RepositoryProfileController.RepositoryProfileController.repositoryProfile(organization:String,reponame:String, collabArray:String)
+GET 	/repositoryProfile	    controllers.RepositoryProfileController.RepositoryProfileController.getrepositoryProfile(organization:String,reponame:String, collabArray:String)

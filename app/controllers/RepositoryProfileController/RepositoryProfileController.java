@@ -1,7 +1,10 @@
 package controllers.RepositoryProfileController;
 
 import java.util.concurrent.CompletionStage;
+
 import scala.util.parsing.json.JSONArray;
+import services.userProfile.UserProfileService;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import play.libs.ws.*;
@@ -32,7 +35,7 @@ import model.RepositoryIssuesUserModel;
 import Helper.RepositoryIssueHelper;
 import model.Issues;
 import play.libs.Json;
-
+import services.repositoryProfile.*;
 import java.util.stream.*;
 
 /**
@@ -44,6 +47,7 @@ import java.util.stream.*;
 public class RepositoryProfileController extends Controller {
 
 	private final WSClient ws;
+	RepositoryProfileService repositoryProfile;
 List<Repositories> repos = new ArrayList<Repositories>();
 	List<RepositoryIssuesModel> issues=new ArrayList<RepositoryIssuesModel>();
 	List<ContributionsModel> collaborators=new ArrayList<ContributionsModel>();
@@ -52,8 +56,9 @@ List<Repositories> repos = new ArrayList<Repositories>();
 	private HttpExecutionContext httpExecutionContext;
 	
 	@Inject
-	RepositoryProfileController(WSClient ws, HttpExecutionContext httpExecutionContext){
+	RepositoryProfileController(WSClient ws, RepositoryProfileService repositoryProfile, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
+		this.repositoryProfile = repositoryProfile;
 		this.httpExecutionContext = httpExecutionContext;
 	}
     /**
@@ -63,19 +68,17 @@ List<Repositories> repos = new ArrayList<Repositories>();
      * <code>GET</code> request with a path of <code>/</code>.
      */
     
-    public CompletionStage<Result> repositoryProfile(String reponame,String organization, String collabArray){
+    public CompletionStage<Result> getrepositoryProfile(String reponame,String organization, String collabArray){
     	
-		return ws.url("https://api.github.com/repos/"+organization+"/"+reponame)
-                .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
+    	return repositoryProfile.getRepoProfileService(organization,reponame,collabArray)
+                 // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
                 .thenApplyAsync(result -> {
                     try {
-                    	JsonNode rootNode = result.asJson();
-                    	ObjectMapper objectMapper = new ObjectMapper();
-                       Repositories repositoryProfile = objectMapper.readValue(rootNode.toString(),Repositories.class);
+                    	
                        
                        //helper.getRepositoryIssueDetails(organization, reponame);
                        
-        				return ok(RepositoryProfile.render(repositoryProfile,reponame,collabArray));
+        				return ok(RepositoryProfile.render(result,reponame,collabArray));
                     }
                     catch(Exception e) {
                     	return ok(e.toString());
@@ -84,10 +87,8 @@ List<Repositories> repos = new ArrayList<Repositories>();
     	
     }
     public CompletionStage<Result> getRepoIssues(String organization, String reponame) {
-
-		return ws.url("https://api.github.com/repos/" + organization+"/"+reponame+"/issues").get().thenApply((WSResponse results) -> {
-			ArrayNode array = (ArrayNode) results.asJson();
-
+    	return repositoryProfile.getReposIssuesService(organization,reponame)
+		.thenApply(array -> {
 			List<Issues> issues = RepositoryIssueHelper.getIssues(array);
 			List<Issues> top20Issues = issues.stream()
 					.sorted(Comparator.comparing(Issues::getCreated_at).reversed()).limit(20)
@@ -103,23 +104,17 @@ List<Repositories> repos = new ArrayList<Repositories>();
 
     
 public CompletionStage<Result> getCollaborators(String organization,String reponame ){
-    	
-		return ws.url(" https://api.github.com/repos/"+organization+"/"+reponame+"/"+"contributors")
-                .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
-                .thenApplyAsync(resultIssues -> {
+	return repositoryProfile.getRepositoryProfileService(organization,reponame)
+                .thenApplyAsync(collaborators -> {
                     try {
                     	
-                    JsonNode rootNode1 = resultIssues.asJson();
-    				ObjectMapper objectMapper = new ObjectMapper();
-    				collaborators = Arrays.asList(objectMapper.treeToValue(rootNode1,
-    						ContributionsModel[].class));
-    				List<String> collabSt = new ArrayList<String>();
+                    List<String> collabSt = new ArrayList<String>();
     				for(ContributionsModel collab: collaborators) {
     					collabSt.add(collab.getLogin().toString());
     					
     				}
     				String collabArray = String.join(",", collabSt);
-    				return redirect(routes.RepositoryProfileController.repositoryProfile(reponame,organization, collabArray));	
+    				return redirect(routes.RepositoryProfileController.getrepositoryProfile(reponame,organization, collabArray));	
     			}
     			catch(Exception e) {
     				return ok(e.toString());

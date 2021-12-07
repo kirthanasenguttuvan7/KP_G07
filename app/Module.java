@@ -6,6 +6,8 @@ import actors.UserParentActor;
 import play.libs.akka.AkkaGuiceSupport;
 import services.GithubApi;
 import services.HomeControllerImplementation;
+import services.repositoryProfile.RepositoryProfileApi;
+import services.repositoryProfile.RepositoryProfileImplementation;
 import services.userProfile.UserProfileApi;
 import services.userProfile.UserProfileImplementation;
 import services.topics.TopicsApi;
@@ -21,5 +23,6 @@ public class Module extends AbstractModule implements AkkaGuiceSupport {
         bind(GithubApi.class).to(HomeControllerImplementation.class);
         bind(UserProfileApi.class).to(UserProfileImplementation.class);
         bind(TopicsApi.class).to(TopicsImplementation.class);
+        bind(RepositoryProfileApi.class).to(RepositoryProfileImplementation.class);
     }
 }
