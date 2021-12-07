@@ -17,6 +17,8 @@ import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.RepositoryIssuesView.*;
+import services.repositoryIssues.*;
+import services.repositoryProfile.RepositoryProfileService;
 /**
  * This controller contains an action to handle HTTP requests
  * to the user profile page.
@@ -27,6 +29,7 @@ import views.html.RepositoryIssuesView.*;
 public class RepositoryIssuesController extends Controller {
 
 	private final WSClient ws;
+	private RepositoryIssuesService repositoryIssuesService;
 	private HttpExecutionContext httpExecutionContext;
 	private String issue_number;
 	private String issue_title;
@@ -40,8 +43,9 @@ public class RepositoryIssuesController extends Controller {
 	 * @param httpExecutionContext Parameter to get HttpExecutionContext
 	 */
 	@Inject
-	public RepositoryIssuesController(WSClient ws, HttpExecutionContext httpExecutionContext){
+	RepositoryIssuesController(WSClient ws, RepositoryIssuesService repositoryIssuesService, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
+		this.repositoryIssuesService = repositoryIssuesService;
 		this.httpExecutionContext = httpExecutionContext;
 	}
 	/**
@@ -57,11 +61,11 @@ public class RepositoryIssuesController extends Controller {
      * @return CompletionStage<Result> to render html page under view
      */
     public CompletionStage<Result> repositoryIssues(String username, String repositoryName){
-		return ws.url("https://api.github.com/repos/" + username+"/"+repositoryName+"/"+"issues")
-				.get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
+		return repositoryIssuesService.getRepositoryIssuesService(username,repositoryName)
+				// THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
                 .thenApplyAsync(result -> {
                     try {
-                    	JsonNode rootNode = result.asJson();
+                    	JsonNode rootNode = result;
                     	List<RepositoryIssuesModel> issueModel = new ArrayList<>(); 
                     	rootNode.forEach(items -> { // DESERIALIZING THE NECESSARY VALUES FROM API
                 			 String issue_number = items.get("number").toString();
@@ -100,5 +104,5 @@ public class RepositoryIssuesController extends Controller {
                     	return ok(e.toString());
                     }
                 }, httpExecutionContext.current());
-    	}
+}
 }
