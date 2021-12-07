@@ -107,6 +107,12 @@ public final class Messages {
     		this.username = requireNonNull(username);
     	}
     }
+    public static final class TopicsKeyword {
+        public final String keyword;
 
+        public TopicsKeyword(String keyword){
+            this.keyword = requireNonNull(keyword);
+        }
+    }
 }
 
