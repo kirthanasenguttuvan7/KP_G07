@@ -18,7 +18,7 @@ public class UserProfileImplementation implements UserProfileApi{
 	private final WSClient ws;
 	
 	 /**
-	  * The constructor injects the necessary dependancies for the class
+	  * The constructor injects the necessary dependencies for the class
 	  * @param ws
 	  */
 	@Inject
@@ -34,10 +34,15 @@ public class UserProfileImplementation implements UserProfileApi{
     */
 	@Override
 	public CompletionStage<WSResponse> getUserProfile(String username){
-		System.out.print("---------------------------" + username + "----------------------");
 		return ws.url("https://api.github.com/users/" + username)
                 .get(); // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
           
+	}
+	
+	@Override
+	public CompletionStage<WSResponse> getUserRepos(String username) {
+		return ws.url("https://api.github.com/users/" + username+"/repos")
+				.get();
 	}
 	
 }

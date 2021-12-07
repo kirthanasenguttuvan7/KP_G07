@@ -8,4 +8,5 @@ import play.libs.ws.WSResponse;
 
 public interface UserProfileApi {
 	public CompletionStage<WSResponse> getUserProfile(String keyword);
+	public CompletionStage<WSResponse> getUserRepos(String username);
 }

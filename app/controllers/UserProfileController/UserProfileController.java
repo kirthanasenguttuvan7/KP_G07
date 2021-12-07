@@ -63,10 +63,9 @@ public class UserProfileController extends Controller {
 	 * @return
 	 */
     public CompletionStage<Result> userProfile(String username, String repositories){
-		//return FutureConverters.toJava(
-				//ask(userProfileActor, new Messages.UserProfile(username), 5000))
-    	return userProfile.getUserProfileService(username)
-    	.thenApplyAsync(result -> {
+		return FutureConverters.toJava(
+				ask(userProfileActor, new Messages.UserProfile(username), 1000))
+				.thenApplyAsync(result -> {
                 		UserProfileModel userProfileModel = (UserProfileModel) result;
                     	List<String> al = new ArrayList<String>();
                     	al = Arrays.asList(repositories.split(","));
@@ -81,24 +80,16 @@ public class UserProfileController extends Controller {
      * @return
      */
     public CompletionStage<Result> getUserRepos(String username){
-    	return ws.url("https://api.github.com/users/" + username+"/repos")
-		.get()
-		.thenApplyAsync(resultRepos -> {
-			try {
-				JsonNode rootNode1 = resultRepos.asJson();
-				ObjectMapper objectMapper = new ObjectMapper();
-				repos = Arrays.asList(objectMapper.treeToValue(rootNode1,
-						Repositories[].class));
-				List<String> repoStrings = new ArrayList<String>();
-				for(Repositories repo: repos) {
-					repoStrings.add(repo.getFull_name().toString());
+    	return FutureConverters.toJava(
+				ask(userProfileActor, new Messages.UserProfile(username), 1000))
+    			.thenApplyAsync(result -> {
+					List<Repositories> repos = (List<Repositories>) result;
+					List<String> repoStrings = new ArrayList<String>();
+					for(Repositories repo: repos) {
+						repoStrings.add(repo.getFull_name().toString());
 				}
 				String repoArray = String.join(",", repoStrings);
 				return redirect(routes.UserProfileController.userProfile(username, repoArray));	
-			}
-			catch(Exception e) {
-				return ok(e.toString());
-			}
 		}, httpExecutionContext.current());
 
     }
