@@ -31,7 +31,7 @@ public class WordStats {
 		for(String title : titles) {
 			if(!(title == null || title.isEmpty())){
 				//SPLITTING THE TITLES INTO INDIVIDUAL WORDS FOR STATS
-				String[] part = (title.split("[\\s+\",-.\\|!\\[\\]]"));
+				String[] part = (title.split("[\\s+\",-.\\\\|!\\[\\]]"));
 				for(String p : part)
 					parts.add(p.toLowerCase());
 			}

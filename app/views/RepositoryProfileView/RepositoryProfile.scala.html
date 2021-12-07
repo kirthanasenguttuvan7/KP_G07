@@ -31,6 +31,7 @@
                       <img src="@repos.getOwner.getAvatar_url" alt="Admin" alt="avatar">
                       <p class="text-secondary mb-1">Repository Name : @repos.getName</p>
                       <p class="text-secondary mb-1">Owner : @repos.getOwner.getLogin</p>
+                      <p class = "text-secondary mb-1">Repository Issues: <a href="repositoryissues/repos/@repos.getOwner.getLogin/@repos.getName/issues">"https://api.github.com/repos/@repos.getOwner.getLogin/@repos.getName/issues"></a></p>
                       <p class="text-secondary mb-1">Description : @repos.getDescription</p>
                       <p class="text-secondary mb-1">Created Date : @repos.getCreated_at</p>
                       <p class="text-secondary mb-1">Last Updated At : @repos.getUpdated_at</p>
