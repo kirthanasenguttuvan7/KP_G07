@@ -2,27 +2,22 @@ package controllers.TopicsController;
 
 import java.util.concurrent.CompletionStage;
 
-import model.KeywordModel;
 import model.SearchModel;
-import play.data.Form;
-import play.mvc.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import views.html.UserProfileView.*;
+
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 import play.libs.concurrent.HttpExecutionContext;
 import javax.inject.Inject;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
-import model.UserProfileModel;
 import model.Repositories;
+import services.userProfile.UserProfileService;
 import views.html.TopicsView.TopicsView;
+import services.topics.*;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -30,14 +25,14 @@ import views.html.TopicsView.TopicsView;
  */
 public class TopicsController extends Controller {
 
-    private final WSClient ws;
+    TopicsService Topics;
     List<Repositories> repos = new ArrayList<Repositories>();
 
     private HttpExecutionContext httpExecutionContext;
 
     @Inject
-    TopicsController(WSClient ws, HttpExecutionContext httpExecutionContext){
-        this.ws = ws;
+    public TopicsController(TopicsService Topics, HttpExecutionContext httpExecutionContext){
+        this.Topics = Topics;
         this.httpExecutionContext = httpExecutionContext;
     }
     /**
@@ -49,21 +44,10 @@ public class TopicsController extends Controller {
 
     public CompletionStage<Result> getSearchResult(String keyword){
 
-
-        return ws.url("https://api.github.com/search/repositories?q=topic:"+keyword)
-                .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
-                .thenApplyAsync(result -> {
-                    try {
-
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode rootNode = result.asJson();
-                        SearchModel searchResult = objectMapper.readValue(rootNode.toString(), SearchModel.class);
+        return Topics.getTopicsService(keyword)
+                .thenApplyAsync(searchResult -> {
                         List<Repositories> repos = searchResult.getItems().stream().limit(10).collect(Collectors.toList());
                         return ok(TopicsView.render(repos));
-                    }
-                    catch(Exception e) {
-                        return ok(e.toString());
-                    }
                 }, httpExecutionContext.current());
 
     }

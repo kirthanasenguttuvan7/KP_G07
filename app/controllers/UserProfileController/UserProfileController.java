@@ -18,6 +18,16 @@ import play.mvc.Http;
 import play.mvc.Result;
 import model.UserProfileModel;
 import model.Repositories;
+
+import akka.actor.*;
+import play.mvc.*;
+import scala.compat.java8.FutureConverters;
+import services.HomeControllerService;
+
+import static akka.pattern.Patterns.ask;
+import services.userProfile.*;
+import actors.UserProfileActor;
+import actors.Messages;
 /**
  * This controller contains an action to handle HTTP requests
  * to the user profile page.
@@ -25,8 +35,10 @@ import model.Repositories;
  * @author Sayali Kulkarni 
  */
 public class UserProfileController extends Controller {
-
-	private final WSClient ws;
+	
+	final ActorRef userProfileActor;
+	UserProfileService userProfile;
+    private final WSClient ws;
 	List<Repositories> repos = new ArrayList<Repositories>();
 
 	private HttpExecutionContext httpExecutionContext;
@@ -37,8 +49,10 @@ public class UserProfileController extends Controller {
 	 * @param httpExecutionContext
 	 */
 	@Inject
-	public UserProfileController(WSClient ws, HttpExecutionContext httpExecutionContext){
+	public UserProfileController(WSClient ws, ActorSystem system, UserProfileService userProfile, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
+		this.userProfileActor = system.actorOf(UserProfileActor.getProps());
+		this.userProfile = userProfile;
 		this.httpExecutionContext = httpExecutionContext;
 	}
     
@@ -49,21 +63,13 @@ public class UserProfileController extends Controller {
 	 * @return
 	 */
     public CompletionStage<Result> userProfile(String username, String repositories){
-    	
-		return ws.url("https://api.github.com/users/" + username)
-                .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
-                .thenApplyAsync(result -> {
-                    try {
-                    	JsonNode rootNode = result.asJson();
-                    	ObjectMapper objectMapper = new ObjectMapper();
-                        UserProfileModel userProfile = objectMapper.readValue(rootNode.toString(), UserProfileModel.class);
+		return FutureConverters.toJava(
+				ask(userProfileActor, new Messages.UserProfile(username), 1000))
+				.thenApplyAsync(result -> {
+                		UserProfileModel userProfileModel = (UserProfileModel) result;
                     	List<String> al = new ArrayList<String>();
                     	al = Arrays.asList(repositories.split(","));
-        				return ok(UserProfile.render(userProfile, al));
-                    }
-                    catch(Exception e) {
-                    	return ok(e.toString());
-                    }
+        				return ok(UserProfile.render(userProfileModel, al));
                 }, httpExecutionContext.current());
     	
     }
@@ -74,24 +80,16 @@ public class UserProfileController extends Controller {
      * @return
      */
     public CompletionStage<Result> getUserRepos(String username){
-    	return ws.url("https://api.github.com/users/" + username+"/repos")
-		.get()
-		.thenApplyAsync(resultRepos -> {
-			try {
-				JsonNode rootNode1 = resultRepos.asJson();
-				ObjectMapper objectMapper = new ObjectMapper();
-				repos = Arrays.asList(objectMapper.treeToValue(rootNode1,
-						Repositories[].class));
-				List<String> repoStrings = new ArrayList<String>();
-				for(Repositories repo: repos) {
-					repoStrings.add(repo.getFull_name().toString());
+    	return FutureConverters.toJava(
+				ask(userProfileActor, new Messages.UserProfile(username), 1000))
+    			.thenApplyAsync(result -> {
+					List<Repositories> repos = (List<Repositories>) result;
+					List<String> repoStrings = new ArrayList<String>();
+					for(Repositories repo: repos) {
+						repoStrings.add(repo.getFull_name().toString());
 				}
 				String repoArray = String.join(",", repoStrings);
 				return redirect(routes.UserProfileController.userProfile(username, repoArray));	
-			}
-			catch(Exception e) {
-				return ok(e.toString());
-			}
 		}, httpExecutionContext.current());
 
     }

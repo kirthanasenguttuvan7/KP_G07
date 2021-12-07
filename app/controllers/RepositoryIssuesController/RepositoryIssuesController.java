@@ -100,5 +100,5 @@ public class RepositoryIssuesController extends Controller {
                     	return ok(e.toString());
                     }
                 }, httpExecutionContext.current());
-}
+    	}
 }

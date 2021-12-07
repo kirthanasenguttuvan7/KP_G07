@@ -1,6 +1,7 @@
 package controllers;
 
 import play.mvc.*;
+import services.HomeControllerService;
 import views.html.*;
 import java.util.concurrent.CompletionStage;
 
@@ -33,7 +34,7 @@ import model.KeywordModel;
  */
 public class HomeController extends Controller {
 
-	private final WSClient ws;
+	HomeControllerService homeControllerService;
 	private HttpExecutionContext httpExecutionContext;
 	FormFactory formFactory;
 	private static CacheController cache = new CacheController();
@@ -43,14 +44,14 @@ public class HomeController extends Controller {
 		  return ok(index.render(formFactory.form(KeywordModel.class), cacheMap)); 
 	  }
 	 /**
-	  * The constructor injects the necessary dependancies for the class
+	  * The constructor injects the necessary dependencies for the class
 	  * @param ws
 	  * @param httpExecutionContext
 	  * @param formFactory
 	  */
 	@Inject
-	HomeController(WSClient ws, HttpExecutionContext httpExecutionContext, FormFactory formFactory){
-		this.ws = ws;
+	HomeController(HomeControllerService homeControllerService, HttpExecutionContext httpExecutionContext, FormFactory formFactory){
+		this.homeControllerService = homeControllerService;
 		this.httpExecutionContext = httpExecutionContext;
 		this.formFactory = formFactory;
 	}
@@ -74,26 +75,13 @@ public class HomeController extends Controller {
      * @return
      */
     public CompletionStage<Result> getSearch(String keyword){
-    	return ws.url("https://api.github.com/search/repositories")
-				.addQueryParameter("q", keyword)
-                .get() // THIS IS NOT BLOCKING! It returns a promise to the response. It comes from WSRequest.
-                .thenApplyAsync(result -> {
-                    try {
-
-                    	ObjectMapper objectMapper = new ObjectMapper();
-                    	JsonNode rootNode = result.asJson();
-              		  		
-                    	SearchModel searchResult = objectMapper.readValue(rootNode.toString(), SearchModel.class);
-                    	List<Repositories> repos = searchResult.getItems().stream().limit(10).collect(Collectors.toList());
+    	return homeControllerService.searchService(keyword)
+    			.thenApplyAsync(result -> {
+    					List<Repositories> repos = result.getItems().stream().limit(10).collect(Collectors.toList());
                     	cache.setCache(keyword, repos);
                     	Map<String, List<Repositories>> cacheMap = cache.get_cache();
                         return ok(index.render(formFactory.form(KeywordModel.class), cacheMap));
-                    }
-                    catch(Exception e) {
-                    	return ok(e.toString());
-                    }
-                }, httpExecutionContext.current());
-    	
+                    }, httpExecutionContext.current());
 
     }
 }
