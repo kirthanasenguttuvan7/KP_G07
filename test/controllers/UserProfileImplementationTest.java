@@ -40,7 +40,6 @@ public class UserProfileImplementationTest {
      */
     @Test
     public void testSearch() throws ExecutionException, InterruptedException, IOException {
-    	twitterTestImplementation.ws = play.test.WSTestClient.newClient(server.httpPort());
         WSResponse search = twitterTestImplementation.getUserProfile("test").toCompletableFuture().get();
         String body = search.getBody();
 
