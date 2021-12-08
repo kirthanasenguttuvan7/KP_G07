@@ -114,5 +114,26 @@ public final class Messages {
             this.keyword = requireNonNull(keyword);
         }
     }
+    public static final class RepositoryProfile {
+    	public final String organization;
+    	public final String reponame;
+    	
+    	public RepositoryProfile(String organization, String reponame){
+    		this.organization = requireNonNull(organization);
+    		this.reponame=requireNonNull(reponame);
+    	}
+    }
+    	public static final class ReposProfile {
+        	public final String organization;
+        	public final String reponame;
+        	public final String collabArray;
+        	
+        	public ReposProfile(String organization, String reponame,String collabArray){
+        		this.organization = requireNonNull(organization);
+        		this.reponame=requireNonNull(reponame);
+        		this.collabArray=requireNonNull(collabArray);
+        	}
+    	
+    }
 }
 
