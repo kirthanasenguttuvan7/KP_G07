@@ -2,6 +2,10 @@ package controllers.TopicsController;
 
 import java.util.concurrent.CompletionStage;
 
+import actors.Messages;
+import actors.TopicsActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 import model.SearchModel;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +19,10 @@ import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
 import model.Repositories;
-import services.userProfile.UserProfileService;
+import scala.compat.java8.FutureConverters;
 import views.html.TopicsView.TopicsView;
 import services.topics.*;
+import static akka.pattern.Patterns.ask;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -29,10 +34,11 @@ public class TopicsController extends Controller {
     List<Repositories> repos = new ArrayList<Repositories>();
 
     private HttpExecutionContext httpExecutionContext;
-
+    final ActorRef topicsActor;
     @Inject
-    public TopicsController(TopicsService Topics, HttpExecutionContext httpExecutionContext){
+    public TopicsController(TopicsService Topics, ActorSystem system, HttpExecutionContext httpExecutionContext){
         this.Topics = Topics;
+        this.topicsActor = system.actorOf(TopicsActor.getProps());
         this.httpExecutionContext = httpExecutionContext;
     }
     /**
@@ -44,8 +50,10 @@ public class TopicsController extends Controller {
 
     public CompletionStage<Result> getSearchResult(String keyword){
 
-        return Topics.getTopicsService(keyword)
-                .thenApplyAsync(searchResult -> {
+        return FutureConverters.toJava(
+                ask(topicsActor, new Messages.TopicsKeyword(keyword), 1000))
+                .thenApplyAsync(result -> {
+                        SearchModel searchResult = (SearchModel) result;
                         List<Repositories> repos = searchResult.getItems().stream().limit(10).collect(Collectors.toList());
                         return ok(TopicsView.render(repos));
                 }, httpExecutionContext.current());

@@ -15,7 +15,7 @@ import play.mvc.Http.Request;
 import play.mvc.Result;
 public class UserProfileImplementation implements UserProfileApi{
 	
-	public final WSClient ws;
+	public WSClient ws;
 	
 	 /**
 	  * The constructor injects the necessary dependencies for the class
@@ -43,6 +43,16 @@ public class UserProfileImplementation implements UserProfileApi{
 	public CompletionStage<WSResponse> getUserRepos(String username) {
 		return ws.url("https://api.github.com/users/" + username+"/repos")
 				.get();
+	}
+
+
+	public WSClient getWs() {
+		return ws;
+	}
+
+
+	public void setWs(WSClient ws) {
+		this.ws = ws;
 	}
 	
 }
