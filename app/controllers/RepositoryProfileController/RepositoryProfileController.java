@@ -56,7 +56,7 @@ List<Repositories> repos = new ArrayList<Repositories>();
 	private HttpExecutionContext httpExecutionContext;
 	
 	@Inject
-	RepositoryProfileController(WSClient ws, RepositoryProfileService repositoryProfile, HttpExecutionContext httpExecutionContext){
+	public RepositoryProfileController(WSClient ws, RepositoryProfileService repositoryProfile, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
 		this.repositoryProfile = repositoryProfile;
 		this.httpExecutionContext = httpExecutionContext;

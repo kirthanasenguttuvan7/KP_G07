@@ -15,7 +15,7 @@ import play.mvc.Http.Request;
 import play.mvc.Result;
 public class UserProfileImplementation implements UserProfileApi{
 	
-	private final WSClient ws;
+	public final WSClient ws;
 	
 	 /**
 	  * The constructor injects the necessary dependencies for the class

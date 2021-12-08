@@ -11,6 +11,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Result;
 import play.test.WithApplication;
 import play.test.WithBrowser;
+import services.repositoryProfile.RepositoryProfileService;
 import akka.util.ByteString;
 import controllers.RepositoryProfileController.RepositoryProfileController;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +56,7 @@ public class RepositoryProfileControllerTest extends WithBrowser {
       ws = play.test.WSTestClient.newClient(server.httpPort());
       formFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
       ec = new GuiceApplicationBuilder().injector().instanceOf(HttpExecutionContext.class);
-      client = new RepositoryProfileController(ws, ec);
+      client = new RepositoryProfileController(ws, new RepositoryProfileService(), ec);
     }
 
     @After
@@ -70,11 +71,11 @@ public class RepositoryProfileControllerTest extends WithBrowser {
     @Test
     public void repositoryProfile() throws Exception {
     	Result result = client.getRepoIssues("octocat","Hello-World")
-        .toCompletableFuture().get(10, TimeUnit.SECONDS);
-    	HttpEntity httpEntity = result.body();
-        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
-        ByteString body = httpEntityStrict.data();
-        String stringBody = body.utf8String();
-        //assertThat(stringBody, containsString("<li>User: <a style=\"color:lightblue\" href=\"/user?username=yangxi0126\">yangxi0126</a> Repository: <a style=\"color:lightblue\" href=\"/repositoryProfile/yangxi0126/javaScript\">yangxi0126/javaScript</a> Topic: </li>"));
+    	        .toCompletableFuture().get(10, TimeUnit.SECONDS);
+    	    	HttpEntity httpEntity = result.body();
+    	        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
+    	        ByteString body = httpEntityStrict.data();
+    	        String stringBody = body.utf8String();
+    	        //assertThat(stringBody, containsString("<li>User: <a style=\"colo
     }
 }

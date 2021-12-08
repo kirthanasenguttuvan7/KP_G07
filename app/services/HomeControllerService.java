@@ -21,7 +21,7 @@ public class HomeControllerService {
 	
 	private ObjectMapper mapper;
 	
-	HomeControllerService(){
+	public HomeControllerService(){
 		mapper = new ObjectMapper();
 	}
 	

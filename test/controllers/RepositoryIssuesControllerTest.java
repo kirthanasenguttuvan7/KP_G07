@@ -11,6 +11,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Result;
 import play.test.WithApplication;
 import play.test.WithBrowser;
+import services.repositoryIssues.RepositoryIssuesService;
 import akka.util.ByteString;
 
 import java.util.concurrent.TimeUnit;
@@ -56,7 +57,7 @@ public class RepositoryIssuesControllerTest extends WithBrowser {
       ws = play.test.WSTestClient.newClient(server.httpPort());
       formFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
       ec = new GuiceApplicationBuilder().injector().instanceOf(HttpExecutionContext.class);
-      client = new RepositoryIssuesController(ws, ec);
+      client = new RepositoryIssuesController(ws, new RepositoryIssuesService(), ec);
     }
 
     @After
@@ -71,11 +72,11 @@ public class RepositoryIssuesControllerTest extends WithBrowser {
     @Test
     public void repositoryIssues() throws Exception {
     	Result result = client.repositoryIssues("octocat","Hello-World")
-        .toCompletableFuture().get(10, TimeUnit.SECONDS);
-    	HttpEntity httpEntity = result.body();
-        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
-        ByteString body = httpEntityStrict.data();
-        String stringBody = body.utf8String();
-        //assertThat(stringBody, containsString("<li>User: <a href=\"/user?username=airbnb\">airbnb</a> Repository: <a href=\"#\">airbnb/javascript</a> Topic: <a href=\"#\"> arrow-functions </a><a href=\"#\"> es2015 </a><a href=\"#\"> es2016 </a><a href=\"#\"> es2017 </a><a href=\"#\"> es2018 </a><a href=\"#\"> es6 </a><a href=\"#\"> eslint </a><a href=\"#\"> javascript </a><a href=\"#\"> linting </a><a href=\"#\"> naming-conventions </a><a href=\"#\"> style-guide </a><a href=\"#\"> style-linter </a><a href=\"#\"> styleguide </a><a href=\"#\"> tc39 </a></li>"));
+    	        .toCompletableFuture().get(10, TimeUnit.SECONDS);
+    	    	HttpEntity httpEntity = result.body();
+    	        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
+    	        ByteString body = httpEntityStrict.data();
+    	        String stringBody = body.utf8String();
+    	        //assertThat(stringBody, containsString("<li>User: assertThat("test", containsString("test"));
     }
 }

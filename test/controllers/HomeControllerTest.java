@@ -36,6 +36,7 @@ import play.server.Server;
 import play.test.WithBrowser;
 
 import play.twirl.api.Content;
+import services.HomeControllerService;
 import views.html.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class HomeControllerTest extends WithApplication {
       ws = play.test.WSTestClient.newClient(server.httpPort());
       formFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
       ec = new GuiceApplicationBuilder().injector().instanceOf(HttpExecutionContext.class);
-      client = new HomeController(ws, ec, formFactory);
+      client = new HomeController(new HomeControllerService(), ec, formFactory);
     }
 
     @After
@@ -97,11 +98,11 @@ public class HomeControllerTest extends WithApplication {
     @Test
     public void repositories() throws Exception {
     	Result result = client.getSearch("javascript")
-        .toCompletableFuture().get(10, TimeUnit.SECONDS);
-    	HttpEntity httpEntity = result.body();
-        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
-        ByteString body = httpEntityStrict.data();
-        String stringBody = body.utf8String();
-        //assertThat(stringBody, containsString("<input type=\"text\" id=\"keyword\" name=\"keyword\">"));
+    	        .toCompletableFuture().get(10, TimeUnit.SECONDS);
+    	    	HttpEntity httpEntity = result.body();
+    	        HttpEntity.Strict httpEntityStrict = (HttpEntity.Strict) httpEntity;
+    	        ByteString body = httpEntityStrict.data();
+    	        String stringBody = body.utf8String();
+    	        //assertThat(stringBody, containsString("<input type=\"text\" id=\"keyword\" name=\"keyword\">"));
     }
 }
