@@ -36,7 +36,7 @@ import actors.Messages;
  */
 public class UserProfileController extends Controller {
 	
-	final ActorRef userProfileActor;
+	//final ActorRef userProfileActor;
 	UserProfileService userProfile;
     private final WSClient ws;
 	List<Repositories> repos = new ArrayList<Repositories>();
@@ -49,9 +49,9 @@ public class UserProfileController extends Controller {
 	 * @param httpExecutionContext
 	 */
 	@Inject
-	public UserProfileController(WSClient ws, ActorSystem system, UserProfileService userProfile, HttpExecutionContext httpExecutionContext){
+	public UserProfileController(WSClient ws,  UserProfileService userProfile, HttpExecutionContext httpExecutionContext){
 		this.ws = ws;
-		this.userProfileActor = system.actorOf(UserProfileActor.getProps());
+		//this.userProfileActor = system.actorOf(UserProfileActor.getProps());
 		this.userProfile = userProfile;
 		this.httpExecutionContext = httpExecutionContext;
 	}
@@ -63,9 +63,10 @@ public class UserProfileController extends Controller {
 	 * @return
 	 */
     public CompletionStage<Result> userProfile(String username, String repositories){
-		return FutureConverters.toJava(
-				ask(userProfileActor, new Messages.UserProfile(username), 1000))
-				.thenApplyAsync(result -> {
+		//return FutureConverters.toJava(
+				//ask(userProfileActor, new Messages.UserProfile(username), 5000))
+    	return userProfile.getUserProfileService(username)
+    	.thenApplyAsync(result -> {
                 		UserProfileModel userProfileModel = (UserProfileModel) result;
                     	List<String> al = new ArrayList<String>();
                     	al = Arrays.asList(repositories.split(","));
@@ -80,13 +81,11 @@ public class UserProfileController extends Controller {
      * @return
      */
     public CompletionStage<Result> getUserRepos(String username){
-    	return FutureConverters.toJava(
-				ask(userProfileActor, new Messages.UserProfile(username), 1000))
-    			.thenApplyAsync(result -> {
-					List<Repositories> repos = (List<Repositories>) result;
-					List<String> repoStrings = new ArrayList<String>();
-					for(Repositories repo: repos) {
-						repoStrings.add(repo.getFull_name().toString());
+    	return userProfile.getRepos(username)
+		.thenApplyAsync(repos -> {
+				List<String> repoStrings = new ArrayList<String>();
+				for(Repositories repo: repos) {
+					repoStrings.add(repo.getFull_name().toString());
 				}
 				String repoArray = String.join(",", repoStrings);
 				return redirect(routes.UserProfileController.userProfile(username, repoArray));	

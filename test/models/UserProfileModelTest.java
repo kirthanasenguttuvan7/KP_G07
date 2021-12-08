@@ -28,4 +28,11 @@ public class UserProfileModelTest {
 		user.setFollowing(10);;
 		assertEquals(user.getFollowing(), 10);
 	}
+	
+	@Test
+	public void userNameTest() {
+		UserProfileModel user = new UserProfileModel();
+		user.setName("Sayali Kulkarni");;
+		assertEquals(user.getName(), "Sayali Kulkarni");
+	}
 }

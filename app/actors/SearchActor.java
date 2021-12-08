@@ -1,6 +1,7 @@
 package actors;
 
 import akka.actor.AbstractActorWithTimers;
+
 import akka.actor.ActorRef;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
@@ -15,6 +16,12 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+/**
+ * 
+ * @author Sayali Kulkarni
+ *
+ */
 public class SearchActor extends AbstractActorWithTimers {
 
 	@Inject
@@ -121,5 +128,15 @@ public class SearchActor extends AbstractActorWithTimers {
             userActor.tell(repositoryMessage, self());
         });
     }
+
+	public HomeControllerService getHomeControllerService() {
+		return homeControllerService;
+	}
+
+	public void setHomeControllerService(HomeControllerService homeControllerService) {
+		this.homeControllerService = homeControllerService;
+	}
+    
+    
 
 }

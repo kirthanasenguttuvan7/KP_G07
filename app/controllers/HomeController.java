@@ -55,7 +55,9 @@ public class HomeController extends Controller {
 		this.httpExecutionContext = httpExecutionContext;
 		this.formFactory = formFactory;
 	}
-    /**
+    public HomeController() {
+	}
+	/**
      * Extracts the keyword from the UI
      * @param request
      * @return Result
